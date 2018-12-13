@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,6 +48,7 @@ public class OrderService extends IntentService {
     public OrderService() {
         super("OrderService");
         handler = new Handler();
+        setIntentRedelivery(true);
     }
 
     /**
@@ -84,12 +86,7 @@ public class OrderService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         ordersRef = FirebaseDatabase.getInstance().getReference("Orders");
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(OrderService.this, "jajko na miekko", Toast.LENGTH_SHORT).show();
-            }
-        });
+
         eventListener = new ValueEventListener() {
 
             @Override
@@ -117,13 +114,13 @@ public class OrderService extends IntentService {
         };
 
         ordersRef.addValueEventListener(eventListener);
-        while (wait) {
-            /*handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(OrderService.this, "jajko na miekko", Toast.LENGTH_SHORT).show();
-                }
-            });*/
+        int a = 0;
+        while (true) {
+            try {
+                Thread.sleep(3000000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -133,6 +130,18 @@ public class OrderService extends IntentService {
                 Toast.makeText(OrderService.this, "onDestroy", Toast.LENGTH_SHORT).show();
         ordersRef.removeEventListener(eventListener);
         //wait = false;
+        Intent intent = new Intent();
+        intent.setAction("restartService");
+        intent.setClass(this, Restarter.class);
+        this.sendBroadcast(intent);
+
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+        Toast.makeText(OrderService.this, "onTaskRemoved", Toast.LENGTH_SHORT).show();
+        ordersRef.removeEventListener(eventListener);
         Intent intent = new Intent();
         intent.setAction("restartService");
         intent.setClass(this, Restarter.class);

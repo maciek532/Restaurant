@@ -16,10 +16,7 @@ public class Restarter extends BroadcastReceiver {
         // an Intent broadcast.
         FirebaseUser firebaseUser=FirebaseAuth.getInstance().getCurrentUser();
 
-        Toast.makeText(context, "interia", Toast.LENGTH_SHORT).show();
-
         if(firebaseUser!=null) {
-            Toast.makeText(context, "fasada", Toast.LENGTH_SHORT).show();
             context.startService(new Intent(context, OrderService.class));
         }
     }
