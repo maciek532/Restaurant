@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">RestaurantProject</string>
+    <string name="main_dish">Welcome in uor restaurant.
+    \n\n\nSwipe left to open menu and choose dish form Restaurant menu!</string>
+    <string name="order">Order this meal</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_crew_orders_view">CrewOrdersView</string>
+</resources>

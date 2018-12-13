@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Projekt Restauracja</string>
+    <string name="main_dish">Witamy w naszej Restauracji.
+    \n\n\nPrzesuń palcem w lewo, aby otworzyć menu i wybierz danie z menu Restauracji!</string>
+    <string name="order">Zamów ten posiłek</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="title_activity_crew_orders_view">CrewOrdersView</string>
+</resources>
