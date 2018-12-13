@@ -12,6 +12,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.milnow5555.restaurantproject.Adapter.OrderAdapter;
 import com.milnow5555.restaurantproject.ClientOrder;
 import com.milnow5555.restaurantproject.CrewOrder;
@@ -33,7 +37,8 @@ public class MyOrdersView extends Fragment {
     CrewOrder crewOrder;
     String key;
     Activity mainActivity;
-
+    DatabaseReference orderRef;
+    boolean first=true;
 
     @Nullable
     @Override
@@ -61,7 +66,35 @@ public class MyOrdersView extends Fragment {
             makeOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ClientOrder.getInstance().makeOrder();
+                    orderRef=ClientOrder.getInstance().makeOrder();
+                    if(first) {
+                        orderRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                ClientOrder order = dataSnapshot.getValue(ClientOrder.class);
+                                ClientOrder.getInstance().set_dishes(order.get_dishes());
+                                ClientOrder.getInstance().set_table(order.get_table());
+                                ClientOrder.getInstance().set_state(order.get_state());
+
+                                adapter = new OrderAdapter(ClientOrder.getInstance().get_dishes(), mainActivity.getApplicationContext(), new OrderAdapter.OnItemCheckListener() {
+                                    @Override
+                                    public void onItemCheck(int position) {
+                                        ClientOrder.getInstance().removeMeal(position);
+                                    }
+                                });
+                                textViewPrice.setText(String.valueOf(ClientOrder.getInstance().getOrderCost()));
+                                textViewState.setText(ClientOrder.getInstance().get_state());
+
+                                recyclerView.setAdapter(adapter);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                        first=false;
+                    }
                 }
             });
         } else {

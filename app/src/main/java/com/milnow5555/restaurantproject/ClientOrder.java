@@ -30,11 +30,13 @@ public class ClientOrder extends Order {
         _dishes = new ArrayList<>();
     }
 
-    public void makeOrder() {
+    public DatabaseReference makeOrder() {
         if (orderReference == null) {
             orderReference = FirebaseDatabase.getInstance().getReference("Orders").push();
         }
         if(_state.equals("Tworzenie zamówienia"))
             orderReference.setValue(this);
+
+        return orderReference;
     }
 }
